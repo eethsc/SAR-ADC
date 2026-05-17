@@ -1,0 +1,71 @@
+* SAR_ADC_CORE.lib
+.subckt SAR_ADC_CORE comp_out VCC VGND clk start sys_clr_n ST1 ST3 dac0 dac1 dac2 dac3 dac4 dac5 dac6 dac7
+
+* 8-Bit SAR ADC Sine Wave Test Bench (Race Condition Fixed)
+.include 74hc.lib
+
+
+X_INV_CLK clk clk_bar VCC VGND 74HC04 vcc1={vcc}
+
+
+* 4. FSM 상태 레지스터 (ST0~ST3)[cite: 5]
+X_S1_FF VCC clk NS1 sys_clr_n S1 S1n VCC VGND 74HC74 vcc1={vcc}
+X_S0_FF VCC clk NS0 sys_clr_n S0 S0n VCC VGND 74HC74 vcc1={vcc}
+
+X_ST0 S1n S0n ST0 VCC VGND 74HC08 vcc1={vcc}
+X_ST1 S1n S0 ST1 VCC VGND 74HC08 vcc1={vcc}
+X_ST2 S1 S0n ST2 VCC VGND 74HC08 vcc1={vcc}
+X_ST3 S1 S0 ST3 VCC VGND 74HC08 vcc1={vcc}
+X_INV_ST1 ST1 ST1_n VCC VGND 74HC04 vcc1={vcc}
+
+* 5. 8클럭 카운터 (QUANT 상태 타이밍)
+X_CNT VCC VCC ST2 ST2 clk VGND VGND VGND VGND q_c0 q_c1 q_c2 q_c3 TC8_raw VCC VGND 74HC161 vcc1={vcc}
+X_AND_TC8 q_c0 q_c1 q_c2 TC8 VCC VGND 74HC11 vcc1={vcc}
+
+* 6. FSM 다음 상태 로직
+X_NS1_F ST1 ST2 NS1 VCC VGND 74HC32 vcc1={vcc}
+X_NS0_1 ST0 start NS0_A VCC VGND 74HC08 vcc1={vcc}
+X_NS0_2 ST2 TC8 NS0_B VCC VGND 74HC08 vcc1={vcc}
+X_NS0_OR1 NS0_A NS0_B NS0_tmp VCC VGND 74HC32 vcc1={vcc}
+X_NS0_F NS0_tmp ST3 NS0 VCC VGND 74HC32 vcc1={vcc}
+
+* 7. 8비트 시프트 레지스터 (One-Hot)
+X_INV_C0 q_c0 q_c0n VCC VGND 74HC04 vcc1={vcc}
+X_INV_C1 q_c1 q_c1n VCC VGND 74HC04 vcc1={vcc}
+X_INV_C2 q_c2 q_c2n VCC VGND 74HC04 vcc1={vcc}
+X_AND_Z1 q_c0n q_c1n z_tmp VCC VGND 74HC08 vcc1={vcc}
+X_AND_Z2 z_tmp q_c2n is_cnt_0 VCC VGND 74HC08 vcc1={vcc}
+X_AND_INJ ST2 is_cnt_0 first_inject VCC VGND 74HC08 vcc1={vcc}
+
+* 시프트 레지스터는 클럭의 '하강 엣지(clk_bar)'에서 이동
+X_SR clk_bar ST1_n first_inject VCC sr7 sr6 sr5 sr4 sr3 sr2 sr1 sr0 VCC VGND 74HC164 vcc1={vcc}
+
+* 8. 최종 출력 레지스터 (SAR Latch) - Race Condition 해결
+* sr_in과 메인 클럭(clk_sys)을 AND 연산하여, sr_in이 켜져있을 때 메인 클럭의 '상승 엣지'에서 데이터를 래치합니다.[cite: 5]
+.subckt LATCH_BIT bit_in sr_in clk_sys rst_n out_q out_qn VCC VGND
+X_AND sr_in clk_sys latch_clk VCC VGND 74HC08 vcc1=5
+X_FF VCC latch_clk bit_in rst_n out_q out_qn VCC VGND 74HC74 vcc1=5
+.ends
+
+* 기존의 불필요한 인버터들을 제거하고 클럭(clk)을 직접 입력으로 제공
+X_OUT7 comp_out sr7 clk ST1_n out7 out7_n VCC VGND LATCH_BIT
+X_OUT6 comp_out sr6 clk ST1_n out6 out6_n VCC VGND LATCH_BIT
+X_OUT5 comp_out sr5 clk ST1_n out5 out5_n VCC VGND LATCH_BIT
+X_OUT4 comp_out sr4 clk ST1_n out4 out4_n VCC VGND LATCH_BIT
+X_OUT3 comp_out sr3 clk ST1_n out3 out3_n VCC VGND LATCH_BIT
+X_OUT2 comp_out sr2 clk ST1_n out2 out2_n VCC VGND LATCH_BIT
+X_OUT1 comp_out sr1 clk ST1_n out1 out1_n VCC VGND LATCH_BIT
+X_OUT0 comp_out sr0 clk ST1_n out0 out0_n VCC VGND LATCH_BIT
+
+* 9. DAC 및 비교기 (B-Source)
+X_OR7 out7 sr7 dac7 VCC VGND 74HC32 vcc1={vcc}
+X_OR6 out6 sr6 dac6 VCC VGND 74HC32 vcc1={vcc}
+X_OR5 out5 sr5 dac5 VCC VGND 74HC32 vcc1={vcc}
+X_OR4 out4 sr4 dac4 VCC VGND 74HC32 vcc1={vcc}
+X_OR3 out3 sr3 dac3 VCC VGND 74HC32 vcc1={vcc}
+X_OR2 out2 sr2 dac2 VCC VGND 74HC32 vcc1={vcc}
+X_OR1 out1 sr1 dac1 VCC VGND 74HC32 vcc1={vcc}
+X_OR0 out0 sr0 dac0 VCC VGND 74HC32 vcc1={vcc}
+
+
+.ends SAR_ADC_CORE

@@ -1,0 +1,30 @@
+.include TL071.lib
+
+* 8-Bit R-2R DAC Subcircuit with TL071 Buffer
+* Ports: B7(MSB) B6 B5 B4 B3 B2 B1 B0(LSB) VCC VEE GND VOUT
+.SUBCKT DAC8_R2R B7 B6 B5 B4 B3 B2 B1 B0 VCC VEE GND VOUT
+
+* --- R-2R Ladder Network ---
+R1 B7 N9 20k
+R2 B6 N10 20k
+R3 B5 N11 20k
+R4 B4 N12 20k
+R5 B3 N13 20k
+R6 B2 N14 20k
+R7 B1 N15 20k
+R8 B0 N16 20k
+R9 N10 N9 10k
+R10 N11 N10 10k
+R11 N12 N11 10k
+R12 N13 N12 10k
+R13 N14 N13 10k
+R14 N15 N14 10k
+R15 N16 N15 10k
+R16 GND N16 20k
+
+* --- TL071 Buffer (Internal Connection) ---
+* TL071 Map: 1:In- 3:Out 2:In+ 4:V+ 5:V-
+* VOUT와 In-(1)을 묶어 Unity Gain Buffer 구성
+X1 VOUT VOUT N9 VCC VEE TL071
+
+.ENDS

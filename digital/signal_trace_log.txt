@@ -1,0 +1,27 @@
+      Time |  State   | CLK |  SR (Hex)  | DAC (Hex)  | COMP
+-----------------------------------------------------------------
+        20 |   IDLE   |  0  |     XX     |     xx     |  x  
+        25 |   IDLE   |  1  |     XX     |     xx     |  x  
+        30 |   IDLE   |  0  |     XX     |     xx     |  x  
+        35 |   IDLE   |  1  |     XX     |     xx     |  x  
+        40 |   SAMP   |  0  |     00     |     00     |  1  
+        45 |   SAMP   |  1  |     00     |     00     |  1  
+        50 |  QUANT   |  0  |     00     |     00     |  1  
+        55 |  QUANT   |  1  |     80     |     80     |  1  
+        60 |  QUANT   |  0  |     80     |     80     |  1  
+        65 |  QUANT   |  1  |     40     |     c0     |  0  
+        70 |  QUANT   |  0  |     40     |     c0     |  0  
+        75 |  QUANT   |  1  |     20     |     a0     |  1  
+        80 |  QUANT   |  0  |     20     |     a0     |  1  
+        85 |  QUANT   |  1  |     10     |     b0     |  1  
+        90 |  QUANT   |  0  |     10     |     b0     |  1  
+        95 |  QUANT   |  1  |     08     |     b8     |  0  
+       100 |  QUANT   |  0  |     08     |     b8     |  0  
+       105 |  QUANT   |  1  |     04     |     b4     |  1  
+       110 |  QUANT   |  0  |     04     |     b4     |  1  
+       115 |  QUANT   |  1  |     02     |     b6     |  0  
+       120 |  QUANT   |  0  |     02     |     b6     |  0  
+       125 |  QUANT   |  1  |     01     |     b5     |  0  
+       130 |  RESULT  |  0  |     01     |     b5     |  0  
+       135 |  RESULT  |  1  |     00     |     b4     |  1  
+       140 |   SAMP   |  0  |     00     |     00     |  1  

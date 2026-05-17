@@ -1,0 +1,9 @@
+Input_Comp,Output_DAC
+1,ff
+0,00
+1,ff
+1,ff
+0,00
+0,00
+1,ff
+0,00
