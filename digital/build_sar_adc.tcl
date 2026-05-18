@@ -1,6 +1,6 @@
 # build_sar_adc.tcl
 set project_name "SAR_ADC_Z7"
-set project_dir "./$project_name"
+set project_dir "./digital/$project_name"
 set part_name "xc7z020clg400-1"
 
 # 1. 기존 프로젝트 정리
@@ -10,8 +10,8 @@ if {[file exists $project_dir]} {
 
 # 2. 프로젝트 생성 및 소스 추가
 create_project $project_name $project_dir -part $part_name -force
-add_files -norecurse "sar_adc_top.v"
-add_files -fileset constrs_1 -norecurse "zybo_z7.xdc"
+add_files -norecurse "digital/sar_adc_top.v"
+add_files -fileset constrs_1 -norecurse "digital/zybo_z7.xdc"
 update_compile_order -fileset sources_1
 
 # ---------------------------------------------------------
@@ -60,8 +60,8 @@ if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
 
 # 5. 리포트 추출
 open_run impl_1
-report_utilization -file "utilization_report.txt"
-report_timing_summary -file "timing_report.txt"
+report_utilization -file "/digital/utilization_report.txt"
+report_timing_summary -file "/digital/timing_report.txt"
 
 puts "========================================================="
 puts "비트스트림 생성이 완료되었습니다."

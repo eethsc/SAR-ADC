@@ -3,8 +3,8 @@ import os
 import sys
 
 VIVADO_BAT = r"D:\Vivado\Vivado\2023.2\bin\vivado.bat"
-BUILD_TCL = "build_sar_adc.tcl"
-BUILD_LOG = "vivado_build_log.txt"
+BUILD_TCL = "digital/build_sar_adc.tcl"
+BUILD_LOG = "digital/vivado_build_log.txt"
 
 def cleanup():
     """파일 점유 방지를 위한 프로세스 정리"""
